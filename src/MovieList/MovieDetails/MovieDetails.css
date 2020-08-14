@@ -1,0 +1,10 @@
+.detail__img {
+  width: 400px;
+  box-shadow: 1px 1px 5px rgb(0, 0, 0.5);
+  float: left;
+  margin-right: 10px;
+}
+
+.spn:hover{
+  background-color: #dedede;
+}

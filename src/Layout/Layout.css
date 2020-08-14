@@ -1,0 +1,6 @@
+.Content {
+  margin-top: 80px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 24px 0px 24px;
+}
