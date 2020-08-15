@@ -7,7 +7,7 @@ Invent Analytics Movie App
 - [x] Route to detail page onClick.
 
 =======================================================
-### yarn ile başlatmak için;
+## yarn ile başlatmak için;
 ### npm install yarn
 - yarn install
 - yarn start
