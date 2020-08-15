@@ -2,15 +2,33 @@ $background: #dedede;
 $width: 400px;
 $boxShadow: 1px 1px 5px rgb(0, 0, 0.5);
 $alignment: left;
-$marginRight: 10px;
+$tenPixel: 10px;
 
 .detail__img {
   width: $width;
   box-shadow: $boxShadow;
   float: $alignment;
-  margin-right: $marginRight;
+  margin-right: $tenPixel;
 }
 
 .spn:hover {
   background-color: $background;
+}
+
+.list__border {
+  border-left: 1.3px solid black;
+  padding-left: 15px;
+}
+
+.tag__span {
+  padding: 1px $tenPixel;
+  background-color: black;
+  color: white;
+  border-radius: $tenPixel;
+  font-size: $tenPixel;
+}
+.list__border {
+  li:hover {
+    background-color: $background;
+  }
 }

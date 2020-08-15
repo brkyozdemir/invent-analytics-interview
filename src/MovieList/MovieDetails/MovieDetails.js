@@ -50,7 +50,11 @@ const MovieDetails = (props) => {
       {props.year !== 'N/A' && <p className="spn"><strong>Year: </strong>{props.year}</p>}
       {props.imdbRating !== 'N/A' && <p className="spn"><strong>IMDb Rating: </strong>{props.imdbRating}</p>}
       {props.imdbVotes !== 'N/A' && <p className="spn"><strong>IMDb Votes: </strong>{props.imdbVotes}</p>}
-    </Paper>
+      <p><strong>Ratings</strong></p>
+      <ul className="list__border">
+        {props.ratings && props.ratings.map(data => (<li>{data.Source} <span className="tag__span">{data.Value}</span></li>))}
+      </ul>
+    </Paper >
   )
 }
 
