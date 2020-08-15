@@ -1,0 +1,16 @@
+$background: #dedede;
+$width: 400px;
+$boxShadow: 1px 1px 5px rgb(0, 0, 0.5);
+$alignment: left;
+$marginRight: 10px;
+
+.detail__img {
+  width: $width;
+  box-shadow: $boxShadow;
+  float: $alignment;
+  margin-right: $marginRight;
+}
+
+.spn:hover {
+  background-color: $background;
+}

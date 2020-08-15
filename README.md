@@ -5,3 +5,13 @@ Invent Analytics Movie App
 - [x] Search input added, and default is set as 'pokemon'.
 - [x] Movies sorted by year.
 - [x] Route to detail page onClick.
+
+=======================================================
+## Yarn 
+### npm install yarn
+- yarn install
+- yarn start
+
+## npm
+- npm install
+- npm start

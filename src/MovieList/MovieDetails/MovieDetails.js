@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Paper, makeStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../../redux/index';
-import './MovieDetails.css'
+import './MovieDetails.scss'
 
 const useStyles = makeStyles(theme => ({
   root: {
