@@ -58,6 +58,10 @@ function TablePaginationActions(props) {
     onChangePage(event, page + 1);
   }
 
+  function handleBackButtonClick(event) {
+    onChangePage(event, page - 1);
+  }
+
   function handleLastPageButtonClick(event) {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   }
@@ -70,6 +74,9 @@ function TablePaginationActions(props) {
         aria-label="First Page"
       >
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
@@ -112,25 +119,35 @@ function MovieList(props) {
   const classes = useStyles();
   const [searchTag, setSearchTag] = React.useState('pokemon');
   const [id, setId] = useState(null)
-  let [initial, setInitial] = useState(1);
   const [page, setPage] = React.useState(0);
   const [mPage, setmPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [loading, setLoading] = useState(false);
 
   async function handleChangePage(event, newPage) {
     setPage(newPage);
-    setmPage(1);
-    if(newPage === 39){
-      await props.onFetchMovies(searchTag,20);
+    
+    newPage > page ? setmPage(1) : setmPage(0);
+    
+    if (newPage === Math.round(props.total / 5)) {
+      setLoading(true);
+      await props.onFetchMovies(searchTag, Math.round(props.total / 10));
       setmPage(1)
+      setLoading(false);
     }
     else if (newPage !== 0 && newPage % 2 === 0 && newPage > page && newPage - page === 1) {
-      await props.onFetchMovies(searchTag, ++initial)
-      setInitial(initial)
+      setLoading(true);
+      await props.onFetchMovies(searchTag, (newPage / 2) + 1)
       setmPage(0)
+      setLoading(false);
+    }
+    else if (newPage !== 0 && newPage % 2 !== 0 && newPage < page && page - newPage === 1) {
+      setLoading(true);
+      await props.onFetchMovies(searchTag,Math.ceil(newPage/2))
+      setmPage(1)
+      setLoading(false);
     }
     else if (newPage === 0) {
-      setInitial(1)
       await props.onFetchMovies(searchTag, 1)
       setmPage(0)
     }
@@ -141,7 +158,9 @@ function MovieList(props) {
   }
 
   useEffect(() => {
+    setLoading(true);
     props.onFetchMovies(searchTag, 1);
+    setLoading(false);
   }, []);
 
 
@@ -181,7 +200,7 @@ function MovieList(props) {
               <StyledTableCell align="center">IMDB ID</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          {loading === false ? <TableBody>
             {props.search && props.search
               .sort((a, b) => { return parseInt((b.Year).split('-')[0]) - parseInt((a.Year).split('-')[0]) })
               .slice(mPage * rowsPerPage, mPage * rowsPerPage + 5)
@@ -192,7 +211,7 @@ function MovieList(props) {
                   <StyledTableCell align="center" component="th" scope="row">{data.imdbID}</StyledTableCell>
                 </StyledTableRow>
               ))}
-          </TableBody>
+          </TableBody> : <TableBody><TableRow><TableCell><span>Loading...</span></TableCell></TableRow></TableBody>}
           <TableFooter>
             <TableRow>
               {props.total && <TablePagination
