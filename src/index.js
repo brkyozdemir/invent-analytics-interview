@@ -11,10 +11,8 @@ import { BrowserRouter } from 'react-router-dom';
 const store = createStore(reducer, applyMiddleware(thunk));
 
 ReactDOM.render(
-  <BrowserRouter>
     <Provider store={store}>
       <App />
-    </Provider>
-  </BrowserRouter>,
+    </Provider>,
   document.getElementById('root')
 );
