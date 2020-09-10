@@ -14,7 +14,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../redux/index';
 import { Redirect } from 'react-router-dom';
 import history from '../history';
@@ -124,31 +124,34 @@ function MovieList(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loading, setLoading] = useState(false);
 
+  const { search, total } = useSelector(state => state.movieReducer);
+  const movieDispatch = useDispatch();
+
   async function handleChangePage(event, newPage) {
     setPage(newPage);
-    
+
     newPage > page ? setmPage(1) : setmPage(0);
-    
-    if (newPage === Math.round(props.total / 5)) {
+
+    if (newPage === Math.floor(total / 5)) {
       setLoading(true);
-      await props.onFetchMovies(searchTag, Math.round(props.total / 10));
+      await movieDispatch(actions.fetchMovies(searchTag, Math.round(total / 10)))
       setmPage(1)
       setLoading(false);
     }
     else if (newPage !== 0 && newPage % 2 === 0 && newPage > page && newPage - page === 1) {
       setLoading(true);
-      await props.onFetchMovies(searchTag, (newPage / 2) + 1)
+      await movieDispatch(actions.fetchMovies(searchTag, (newPage / 2) + 1))
       setmPage(0)
       setLoading(false);
     }
     else if (newPage !== 0 && newPage % 2 !== 0 && newPage < page && page - newPage === 1) {
       setLoading(true);
-      await props.onFetchMovies(searchTag,Math.ceil(newPage/2))
+      await movieDispatch(actions.fetchMovies(searchTag, Math.ceil(newPage / 2)))
       setmPage(1)
       setLoading(false);
     }
     else if (newPage === 0) {
-      await props.onFetchMovies(searchTag, 1)
+      await movieDispatch(actions.fetchMovies(searchTag, 1))
       setmPage(0)
     }
   }
@@ -159,20 +162,20 @@ function MovieList(props) {
 
   useEffect(() => {
     setLoading(true);
-    props.onFetchMovies(searchTag, 1);
+    movieDispatch(actions.fetchMovies(searchTag, 1));
     setLoading(false);
-  }, []);
+  }, [searchTag, movieDispatch]);
 
 
   const handleChange = (e) => {
     setSearchTag(e.target.value)
-    props.onFetchMovies(e.target.value, 1)
-    e.target.value === '' && props.onFetchMovies(undefined, 1)
+    movieDispatch(actions.fetchMovies(e.target.value, 1))
+    e.target.value === '' && movieDispatch(actions.fetchMovies(undefined, 1))
   }
 
   const handleDetail = (title, id) => {
     setId(id);
-    props.onSendTitle(title);
+    movieDispatch({ type: "TITLE", payload: { title: title } });
     history.push(`/movie/${id}`);
   }
 
@@ -201,7 +204,7 @@ function MovieList(props) {
             </TableRow>
           </TableHead>
           {loading === false ? <TableBody>
-            {props.search && props.search
+            {search && search
               .sort((a, b) => { return parseInt((b.Year).split('-')[0]) - parseInt((a.Year).split('-')[0]) })
               .slice(mPage * rowsPerPage, mPage * rowsPerPage + 5)
               .map((data, index) => (
@@ -214,10 +217,10 @@ function MovieList(props) {
           </TableBody> : <TableBody><TableRow><TableCell><span>Loading...</span></TableCell></TableRow></TableBody>}
           <TableFooter>
             <TableRow>
-              {props.total && <TablePagination
+              {total && <TablePagination
                 rowsPerPageOptions={[5]}
                 colSpan={3}
-                count={parseInt(props.total)}
+                count={parseInt(total)}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
@@ -236,18 +239,4 @@ function MovieList(props) {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    search: state.movieReducer.search,
-    total: state.movieReducer.total
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onFetchMovies: (search, page) => dispatch(actions.fetchMovies(search, page)),
-    onSendTitle: (title) => dispatch({ type: "TITLE", payload: { title: title } })
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MovieList);
+export default MovieList;

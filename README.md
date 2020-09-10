@@ -6,8 +6,6 @@ Invent Analytics Movie App
 - [x] Movies sorted by year.
 - [x] Route to detail page onClick.
 
-[Watch with me!](https://watchwithbotuz.herokuapp.com/movie)
-
 =======================================================
 ## yarn ile başlatmak için;
 ### npm install yarn
